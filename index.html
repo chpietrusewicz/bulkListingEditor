@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bulk Listing Editor</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle sidebar">
+                <svg class="toggle-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+                </svg>
+            </button>
+            <button class="nav-item active" data-screen="home" aria-label="Home">
+                <img src="icons/home.png" alt="Home" class="nav-icon">
+                <span class="nav-label">Home</span>
+            </button>
+
+            <button class="nav-item" data-screen="list" aria-label="List View">
+                <img src="icons/upload.png" alt="Upload" class="nav-icon">
+                <span class="nav-label">Upload</span>
+            </button>
+
+            <button class="nav-item" data-screen="images" aria-label="Images">
+                <img src="icons/batches.png" alt="Batches" class="nav-icon">
+                <span class="nav-label">Batches</span>
+            </button>
+
+            <button class="nav-item" data-screen="analytics" aria-label="Pricing">
+                <img src="icons/pricing.png" alt="Pricing" class="nav-icon">
+                <span class="nav-label">Pricing</span>
+            </button>
+
+            <button class="nav-item nav-help" data-screen="help" aria-label="Help">
+                <img src="icons/help.png" alt="Help" class="nav-icon">
+                <span class="nav-label">Help</span>
+            </button>
+
+            <button class="nav-item nav-settings" data-screen="settings" aria-label="Settings">
+                <img src="icons/settings.png" alt="Settings" class="nav-icon">
+                <span class="nav-label">Settings</span>
+            </button>
+
+            <button class="nav-item nav-account" data-screen="account" aria-label="Account">
+                <img src="icons/account.png" alt="Account" class="nav-icon">
+                <span class="nav-label">Account</span>
+            </button>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Welcome Screen -->
+            <div class="screen active" id="home-screen">
+                <div class="welcome-text">
+                    <p class="welcome-subtitle">Welcome to</p>
+                    <h1 class="welcome-title">Bulk Listing Editor</h1>
+                </div>
+            </div>
+
+            <!-- List/Upload Screen -->
+            <div class="screen" id="list-screen">
+                <div class="upload-form">
+                    <!-- Batch Title/SKU Field (Full Width) -->
+                    <div class="input-field full-width">
+                        <input type="text" placeholder="Batch Title / SKU" id="batch-title-input">
+                    </div>
+
+                    <!-- Photo Upload Area -->
+                    <div class="upload-box">
+                        <img src="icons/upload-button.png" alt="Upload" class="upload-icon">
+                        <p class="upload-text">Import Photos</p>
+                        <input type="file" class="file-input" accept="image/*" multiple>
+                    </div>
+
+                    <!-- Input Fields Grid -->
+                    <div class="input-grid">
+                        <div class="input-field">
+                            <input type="text" placeholder="Num. Listings">
+                        </div>
+                        <div class="input-field">
+                            <select class="listing-select" id="batch-condition-select" style="color: var(--text-dim);"
+                                required>
+                                <option value="">Condition *</option>
+                                <option value="Near Mint or better">Near Mint or better</option>
+                                <option value="Lightly Played or better">Lightly Played or better</option>
+                                <option value="Moderately Played">Moderately Played</option>
+                                <option value="Heavily Played">Heavily Played</option>
+                            </select>
+                        </div>
+                        <div class="input-field">
+                            <input type="text" placeholder="Min. Price">
+                        </div>
+                        <div class="input-field">
+                            <select class="listing-select" id="batch-finish-select" style="color: var(--text-dim);"
+                                required>
+                                <option value="">Finish *</option>
+                                <option value="Foil">Foil</option>
+                                <option value="Holo">Holo</option>
+                                <option value="Regular">Regular</option>
+                                <option value="Reverse Holo">Reverse Holo</option>
+                            </select>
+                        </div>
+                        <div class="input-field">
+                            <select class="listing-select" id="batch-category-select" style="color: var(--text-dim);"
+                                required>
+                                <option value="">Game *</option>
+                                <option value="mtg">Magic: The Gathering</option>
+                                <option value="pokemon">Pokemon TCG</option>
+                                <option value="yugioh">Yu-Gi-Oh!</option>
+                                <option value="lorcana">Disney Lorcana</option>
+                                <option value="onepiece">One Piece</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Continue Button -->
+                    <button class="continue-btn" id="continue-to-editor">Continue</button>
+
+                    <!-- Progress Bar (hidden by default) -->
+                    <div class="progress-container" id="upload-progress" style="display: none;">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progress-fill"></div>
+                        </div>
+                        <p class="progress-text">Processing images...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Listings Editor Screen -->
+            <div class="screen" id="editor-screen">
+                <!-- Top Action Bar -->
+                <div class="action-bar">
+                    <input type="text" class="editor-title-input" id="editor-title-input"
+                        placeholder="Batch Title / SKU">
+                    <div class="action-buttons-group">
+                        <button class="action-btn add-photos-btn" id="add-photos-btn">Add Photos</button>
+                        <button class="action-btn export-btn">Export</button>
+                        <button class="action-btn save-quit-btn" id="save-quit-btn">Save and Quit</button>
+                    </div>
+                </div>
+                <input type="file" id="add-photos-input" multiple accept="image/*" style="display: none;">
+
+                <!-- Scrollable Listings Container -->
+                <div class="listings-container" id="listings-container">
+                    <!-- Listing items will be dynamically generated here -->
+                </div>
+
+                <!-- Loading Spinner (hidden by default) -->
+                <div class="loading-overlay" id="save-loading" style="display: none;">
+                    <div class="spinner"></div>
+                    <p class="loading-text">Saving...</p>
+                </div>
+            </div>
+
+            <!-- Batches Screen (after Save & Quit) -->
+            <div class="screen" id="batches-screen">
+                <div class="batches-header">
+                    <h1 class="batches-title">Batches</h1>
+                </div>
+                <div class="batches-grid" id="batches-grid">
+                    <!-- Batch cards will be rendered here -->
+                </div>
+            </div>
+
+            <!-- Help Screen -->
+            <div class="screen" id="help-screen">
+                <div class="help-container">
+                    <h1 class="help-title">Help & Guide</h1>
+
+                    <div class="help-section">
+                        <h2 class="help-section-title">Getting Started</h2>
+                        <p class="help-text">
+                            Welcome to the Bulk Listing Editor! This tool helps you create and manage multiple product
+                            listings efficiently.
+                        </p>
+                    </div>
+
+                    <div class="help-section">
+                        <h2 class="help-section-title">How to Use</h2>
+                        <ol class="help-list">
+                            <li><strong>Upload CSV:</strong> Start by uploading a CSV file with your product data on the
+                                List screen.</li>
+                            <li><strong>Fill Details:</strong> Complete the required fields (Title, Category,
+                                Description, Price, Quantity).</li>
+                            <li><strong>Edit Listings:</strong> Review and modify your listings in the editor view.</li>
+                            <li><strong>Save Batch:</strong> Click "Save and Quit" to save your current batch for later.
+                            </li>
+                            <li><strong>Export:</strong> When ready, click "Export" to generate your final listing
+                                files.</li>
+                        </ol>
+                    </div>
+
+                    <div class="help-section">
+                        <h2 class="help-section-title">Navigation</h2>
+                        <ul class="help-list">
+                            <li><strong>Home:</strong> Return to the welcome screen</li>
+                            <li><strong>List:</strong> Upload and configure new listings</li>
+                            <li><strong>Images:</strong> View all saved batches</li>
+                            <li><strong>Analytics:</strong> (Coming soon) View listing statistics</li>
+                            <li><strong>Help:</strong> Access this help guide</li>
+                        </ul>
+                    </div>
+
+                    <div class="help-section">
+                        <h2 class="help-section-title">Tips</h2>
+                        <ul class="help-list">
+                            <li>Make sure your CSV file is properly formatted before uploading</li>
+                            <li>Fill in all required fields to avoid export errors</li>
+                            <li>Save your work regularly using "Save and Quit"</li>
+                            <li>You can edit saved batches by clicking on them in the Batches screen</li>
+                            <li>The export process may take a few moments depending on batch size</li>
+                        </ul>
+                    </div>
+
+                    <div class="help-section">
+                        <h2 class="help-section-title">Need More Help?</h2>
+                        <p class="help-text">
+                            For additional support or to report issues, please contact our support team or refer to the
+                            documentation.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Screen -->
+            <div class="screen" id="analytics-screen">
+                <div class="analytics-header">
+                    <h1 class="analytics-percentage">+2.34%</h1>
+                    <div class="analytics-filters">
+                        <button class="filter-btn">Week</button>
+                        <button class="filter-btn active">Month</button>
+                        <button class="filter-btn">6 Months</button>
+                        <button class="filter-btn">Year</button>
+                    </div>
+                    <div class="analytics-actions-left">
+                        <button id="select-all-pricing" class="small-action-btn">Select All</button>
+                        <button id="deselect-all-pricing" class="small-action-btn">Deselect All</button>
+                    </div>
+                </div>
+                <div class="analytics-grid" id="analytics-grid">
+                    <!-- Analytics cards will be rendered here -->
+                </div>
+                <button class="edit-btn-floating" id="edit-selected-btn" disabled aria-disabled="true"
+                    aria-label="Edit selected listings">Edit <span id="edit-selected-count" aria-live="polite"
+                        aria-atomic="true" style="margin-left:6px; font-weight:700; display:none;"></span></button>
+            </div>
+
+            <!-- Price Edit Screen -->
+            <div class="screen" id="price-edit-screen">
+                <div class="price-edit-container">
+                    <h1 class="price-edit-title">Edit Prices</h1>
+                    <p class="price-edit-subtitle">Change the price for the selected listings below.</p>
+
+                    <div id="price-edit-list" class="price-edit-list">
+                        <!-- Items will be injected here -->
+                    </div>
+
+                    <div class="price-edit-actions">
+                        <button id="apply-price-changes" class="action-btn">Apply Changes</button>
+                        <button id="cancel-price-edit" class="action-btn">Cancel</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Home Screen -->
+            <div class="screen" id="settings-screen">
+                <div class="settings-container">
+                    <h1 class="settings-title">Settings</h1>
+
+                    <div class="settings-section">
+                        <h2 class="settings-section-title">Appearance</h2>
+                        <div class="settings-option">
+                            <div class="settings-option-info">
+                                <div class="settings-option-name">Theme</div>
+                                <div class="settings-option-description">Choose your preferred color theme</div>
+                            </div>
+                            <select class="settings-select">
+                                <option value="dark" selected>Dark</option>
+                                <option value="light">Light</option>
+                                <option value="auto">Auto</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h2 class="settings-section-title">Editor</h2>
+                        <div class="settings-option">
+                            <div class="settings-option-info">
+                                <div class="settings-option-name">Auto-save</div>
+                                <div class="settings-option-description">Automatically save changes as you edit</div>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="settings-option">
+                            <div class="settings-option-info">
+                                <div class="settings-option-name">Default batch size</div>
+                                <div class="settings-option-description">Number of listings per batch</div>
+                            </div>
+                            <input type="number" class="settings-input" value="50" min="1" max="1000">
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h2 class="settings-section-title">Export</h2>
+                        <div class="settings-option">
+                            <div class="settings-option-info">
+                                <div class="settings-option-name">Export format</div>
+                                <div class="settings-option-description">Default file format for exports</div>
+                            </div>
+                            <select class="settings-select">
+                                <option value="csv" selected>CSV</option>
+                                <option value="json">JSON</option>
+                                <option value="xml">XML</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Account Screen -->
+            <div class="screen" id="account-screen">
+                <div class="account-container">
+                    <h1 class="account-title">Account</h1>
+
+                    <div class="account-profile">
+                        <div class="account-avatar">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path
+                                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z" />
+                            </svg>
+                        </div>
+                        <button class="account-edit-btn">Change Photo</button>
+                    </div>
+
+                    <div class="account-section">
+                        <h2 class="account-section-title">Profile Information</h2>
+                        <div class="account-field">
+                            <label class="account-label">Full Name</label>
+                            <input type="text" class="account-input" value="John Doe" placeholder="Enter your name">
+                        </div>
+                        <div class="account-field">
+                            <label class="account-label">Email</label>
+                            <input type="email" class="account-input" value="john.doe@example.com"
+                                placeholder="Enter your email">
+                        </div>
+                        <div class="account-field">
+                            <label class="account-label">Username</label>
+                            <input type="text" class="account-input" value="johndoe" placeholder="Enter username">
+                        </div>
+                    </div>
+
+                    <div class="account-section">
+                        <h2 class="account-section-title">Security</h2>
+                        <button class="account-action-btn">Change Password</button>
+                        <button class="account-action-btn">Enable Two-Factor Authentication</button>
+                    </div>
+
+                    <div class="account-section">
+                        <button class="account-save-btn">Save Changes</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div class="modal-overlay" id="delete-modal">
+        <div class="modal-content">
+            <h2 class="modal-title">Delete Batch?</h2>
+            <p class="modal-text">Are you sure you want to delete this batch? This action cannot be undone.</p>
+            <div class="modal-buttons">
+                <button class="modal-btn modal-btn-cancel" id="modal-cancel">Cancel</button>
+                <button class="modal-btn modal-btn-delete" id="modal-delete">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Export Modal -->
+    <div class="modal-overlay" id="export-modal">
+        <div class="modal-content export-modal-content">
+            <div class="export-icon-container">
+                <img src="icons/export-icon.png" alt="Export" class="export-icon">
+                <img src="icons/export-arrow.png" alt="Arrow" class="export-arrow">
+            </div>
+            <div class="export-progress-bar">
+                <div class="export-progress-fill"></div>
+            </div>
+            <button class="modal-btn export-done-btn" id="export-done-btn">Done</button>
+        </div>
+    </div>
+
+    <!-- Image Side Panel -->
+    <div class="image-panel" id="image-panel">
+        <div class="image-panel-header">
+            <h2>Images</h2>
+            <button class="image-panel-close" id="image-panel-close" aria-label="Close panel">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path
+                        d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+                </svg>
+            </button>
+        </div>
+        <div class="image-panel-content">
+            <div class="images-grid" id="images-grid">
+                <!-- Images will be dynamically added here -->
+            </div>
+            <div style="display: flex; gap: 12px; flex-direction: column; margin-top: 20px;">
+                <input type="text" id="image-url-input" placeholder="Paste image URL"
+                    style="padding: 12px; background: var(--gray-light); border: 1px solid var(--gray-lighter); border-radius: 6px; color: var(--text); font-size: 14px;">
+                <button class="image-upload-btn">
+                    <svg style="width: 20px; height: 20px; margin-right: 8px;" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z" />
+                    </svg>
+                    Upload Image
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Image Carousel Modal -->
+    <div class="carousel-modal" id="carousel-modal">
+        <div class="carousel-overlay"></div>
+        <div class="carousel-container">
+            <button class="carousel-close" id="carousel-close" aria-label="Close carousel">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path
+                        d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+                </svg>
+            </button>
+            <button class="carousel-prev" id="carousel-prev" aria-label="Previous image">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+                </svg>
+            </button>
+            <div class="carousel-image-container">
+                <img class="carousel-image" id="carousel-image" alt="Listing image">
+                <div class="carousel-counter" id="carousel-counter">1 / 1</div>
+            </div>
+            <button class="carousel-next" id="carousel-next" aria-label="Next image">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+    <!-- JavaScript Modules -->
+    <script src="js/config.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/navigation.js"></script>
+    <script src="js/listing-item.js"></script>
+    <script src="js/photo-upload.js"></script>
+    <script src="js/batch-manager.js"></script>
+    <script src="js/analytics.js"></script>
+    <script src="js/export.js"></script>
+</body>
+
+</html>
