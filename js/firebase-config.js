@@ -7,13 +7,13 @@
 // 5. Enable Firestore Database in Firebase Console
 
 const firebaseConfig = {
-  apiKey: "AIzaSyD3X4q3f8FrlgFoED9B5B6pTulSAEMsrPo",
-  authDomain: "listingeditor-e873f.firebaseapp.com",
-  projectId: "listingeditor-e873f",
-  storageBucket: "listingeditor-e873f.firebasestorage.app",
-  messagingSenderId: "542842755372",
-  appId: "1:542842755372:web:250f42a7622655de02b489",
-  measurementId: "G-WGQFRCP65F"
+    apiKey: "YOUR_API_KEY_HERE",
+    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT_ID.firebasestorage.app",
+    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+    appId: "YOUR_APP_ID",
+    measurementId: "YOUR_MEASUREMENT_ID"
 };
 
 // Initialize Firebase (will be called from main config)

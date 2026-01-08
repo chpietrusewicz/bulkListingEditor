@@ -1,0 +1,20 @@
+# Firebase configuration with real credentials
+js/firebase-config.local.js
+
+# Environment variables
+.env
+.env.local
+
+# Dependencies
+node_modules/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
