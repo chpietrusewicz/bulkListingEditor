@@ -1,5 +1,6 @@
-# Firebase configuration with real credentials
+# Configuration files with real credentials
 js/firebase-config.local.js
+js/config.local.js
 
 # Environment variables
 .env

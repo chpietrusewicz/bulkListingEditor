@@ -1,7 +1,7 @@
 // Configuration and constants
 // ImgBB API Configuration
 // Get your free API key at: https://api.imgbb.com/
-const IMGBB_API_KEY = 'de6f2de2e6780eaa56e9ff8aba676d56'; // Replace with your ImgBB API key
+const IMGBB_API_KEY = 'YOUR_IMGBB_API_KEY_HERE'; // Replace with your ImgBB API key
 
 // Global state variables
 // Analytics listings mapping (keeps reference to original batch/listing)
